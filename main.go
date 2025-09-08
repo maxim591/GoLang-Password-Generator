@@ -3,21 +3,41 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"time"
+	"os"
+	"os/exec"
+	"runtime"
 )
 
+func clearScreen() {
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "linux", "darwin":
+		cmd = exec.Command("clear")
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "cls")
+	default:
+		fmt.Print("\033[2J\033[H")
+		return
+	}
+
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
 func main() {
-	groese := 16
-	eingabe := 0
-	eingabe2 := 0
-	gb, kb, sz, z := false, false, false, false
-	rand.Seed(time.Now().UnixNano())
 
 	for {
+		groese := 16
+		eingabe := 0
+		eingabe2 := 0
+		eingabe3 := 0
+		gb, kb, sz, z := true, true, true, true
+		clearScreen()
 		fmt.Printf(`
-	[1] Generieren
-	[2] Einstellungen
-	`)
+[1] Generieren
+[2] Einstellungen
+`)
+		fmt.Print("\n-> ")
 		fmt.Scan(&eingabe)
 
 		buchstabenG := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -27,7 +47,7 @@ func main() {
 
 		switch eingabe {
 		case 1:
-			// Generieren
+			clearScreen()
 			charset := ""
 			if gb {
 				charset += buchstabenG
@@ -51,32 +71,42 @@ func main() {
 				randomIndex := rand.Intn(len(charset))
 				password[i] = charset[randomIndex]
 			}
-			fmt.Printf("Dein Password: %s\n", string(password))
+
+			fmt.Printf("\nDein Password: %s\n", string(password))
+			fmt.Scan(&eingabe3)
+			break
 		case 2:
-			fmt.Printf(`
-		[1] Länge ändern 	   [%v]
-		[2] Benutze Großbuchstaben [%v]
-		[3] Benutze Kleinbuchstben [%v]
-		[4] Benutze Zahlen	   [%v]
-		[5] Benutze Sonderzeichen  [%v]
-		`, groese, gb, kb, z, sz)
-			fmt.Scan(&eingabe2)
-			if eingabe2 == 1 {
-				fmt.Printf("Wie Lange soll es sein: ")
-				fmt.Scan(&groese)
+			for eingabe2 != 9 {
+				clearScreen()
+				fmt.Printf(`
+[1] Länge ändern 	   [%v]
+[2] Benutze Großbuchstaben [%v]
+[3] Benutze Kleinbuchstben [%v]
+[4] Benutze Zahlen	   [%v]
+[5] Benutze Sonderzeichen  [%v]
+
+[9] Back
+`, groese, gb, kb, z, sz)
+				fmt.Print("\n-> ")
+				fmt.Scan(&eingabe2)
+				if eingabe2 == 1 {
+					fmt.Printf("Wie Lange soll es sein: ")
+					fmt.Scan(&groese)
+				}
+				if eingabe2 == 2 {
+					gb = !gb
+				}
+				if eingabe2 == 3 {
+					kb = !kb
+				}
+				if eingabe2 == 4 {
+					z = !z
+				}
+				if eingabe2 == 5 {
+					sz = !sz
+				}
 			}
-			if eingabe2 == 2 {
-				gb = !gb
-			}
-			if eingabe2 == 3 {
-				kb = !kb
-			}
-			if eingabe2 == 4 {
-				z = !z
-			}
-			if eingabe2 == 5 {
-				sz = !sz
-			}
+
 		default:
 			fmt.Printf("Ungültige eingabe")
 		}
