@@ -74,7 +74,6 @@ func main() {
 
 			fmt.Printf("\nDein Password: %s\n", string(password))
 			fmt.Scan(&eingabe3)
-			break
 		case 2:
 			for eingabe2 != 9 {
 				clearScreen()
