@@ -25,9 +25,9 @@ func clearScreen() {
 	cmd.Run()
 }
 func main() {
-
-	for {
 		groese := 16
+	for {
+
 		eingabe := 0
 		eingabe2 := 0
 		eingabe3 := 0
@@ -113,3 +113,4 @@ func main() {
 	}
 
 }
+
